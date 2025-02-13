@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\UserListRequest;
+use App\Http\Requests\Api\UserUpdateRequest;
 use App\Models\Usuario;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -124,5 +125,69 @@ class UsuarioController extends Controller
             'cargo' => $user->cargo->nombre,
             'email' => $user->email,
         ];
+    }
+
+    public function updateUsuario(UserUpdateRequest $request) : JsonResponse {
+        try {
+            $idUsuario = $request->input('idUser');
+            $usuario = Usuario::find($idUsuario);
+
+            if (!$usuario) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Usuario no encontrado.',
+                ], 404);
+            }
+
+            $usuario->update([
+                'usuario' => $request->input('usuario'),
+                'primerNombre' => $request->input('primerNombre'),
+                'segundoNombre' => $request->input('segundoNombre'),
+                'primerApellido' => $request->input('primerApellido'),
+                'segundoApellido' => $request->input('segundoApellido'),
+                'idDepartamento' => $request->input('idDepartamento'),
+                'idCargo' => $request->input('idCargo'),
+                'email' => $request->input('email'),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Usuario actaulizado existosamente.',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'success' => false,
+                'message' => 'Error interno del servidor: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storeUsuario(Request $request) : JsonResponse {
+        try {
+            $usuario = Usuario::create([
+                'usuario' => $request->input('usuario'),
+                'primerNombre' => $request->input('primerNombre'),
+                'segundoNombre' => $request->input('segundoNombre'),
+                'primerApellido' => $request->input('primerApellido'),
+                'segundoApellido' => $request->input('segundoApellido'),
+                'idDepartamento' => $request->input('idDepartamento'),
+                'idCargo' => $request->input('idCargo'),
+                'email' => $request->input('email'),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Miembro de la familia registrado existosamente.',
+                'data' => $usuario,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'success' => false,
+                'message' => 'Error interno del servidor' . $e->getMessage(),
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400..800;1,400..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <!-- Styles -->
     <link href="{{asset('assets/css/themes.css')}}" rel="stylesheet" />
 </head>
@@ -29,15 +30,14 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body px-4 py-5">
-                        <form class="row g-3 needs-validation" novalidate>
-
+                        <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="departamento" class="form-label fw-semibold fs-sm mb-1">Departamento:</label>
                                 <select class="form-select rounded-1" name="departamento" id="departamento" required>
                                     <option selected disabled value="">Seleccione un Departamento</option>
                                     <option>...</option>
                                 </select>
-                                <div class="invalid-feedback">
+                                <div class="invalid-feedback" id="departamentoError">
                                     Please select a valid state.
                                 </div>
                             </div>
@@ -47,15 +47,15 @@
                                     <option selected disabled value="">Seleccione un perfil</option>
                                     <option>...</option>
                                 </select>
-                                <div class="invalid-feedback">
+                                <div class="invalid-feedback" id="cargoError">
                                     Please select a valid state.
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <label for="usuario" class="form-label fw-semibold fs-sm mb-1">Usuario:</label>
-                                <input type="text" class="form-control rounded-1" id="usuario" required />
-                                <div class="invalid-feedback">
+                                <input type="text" class="form-control rounded-1" name="usuario" id="usuario" required />
+                                <div class="invalid-feedback" id="usuarioError">
                                     Looks good!
                                 </div>
                             </div>
@@ -63,46 +63,46 @@
                             <div class="col-md-6">
                                 <label for="email" class="form-label fw-semibold fs-sm mb-1">Email:</label>
                                 <input type="email" class="form-control rounded-1" name="email" id="email" required />
-                                <div class="invalid-feedback">
+                                <div class="invalid-feedback" id="emailError">
                                     Looks good!
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <label for="primerNombre" class="form-label fw-semibold fs-sm mb-1">Primer Nombre:</label>
-                                <input type="text" class="form-control rounded-1" id="primerNombre" required />
-                                <div class="invalid-feedback">
+                                <input type="text" class="form-control rounded-1" name="primerNombre" id="primerNombre" required />
+                                <div class="invalid-feedback" id="primerNombreError">
                                     Please provide a valid city.
                                 </div>
                             </div>
                             
                             <div class="col-md-6">
                                 <label for="segundoNombre" class="form-label fw-semibold fs-sm mb-1">Segundo Nombre</label>
-                                <input type="text" class="form-control rounded-1" id="segundoNombre" required />
-                                <div class="invalid-feedback">
+                                <input type="text" class="form-control rounded-1" name="segundoNombre" id="segundoNombre" required />
+                                <div class="invalid-feedback" id="segundoNombreError">
                                     Please provide a valid zip.
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <label for="primerApellido" class="form-label fw-semibold fs-sm mb-1">Primer Apellido:</label>
-                                <input type="text" class="form-control rounded-1" id="primerApellido" required />
-                                <div class="invalid-feedback">
+                                <input type="text" class="form-control rounded-1" name="primerApellido" id="primerApellido" required />
+                                <div class="invalid-feedback" id="primerApellidoError">
                                     Please provide a valid city.
                                 </div>
                             </div>
                             
                             <div class="col-md-6">
                                 <label for="segundoApellido" class="form-label fw-semibold fs-sm mb-1">Segundo Apellido</label>
-                                <input type="text" class="form-control rounded-1" id="segundoApellido" required />
-                                <div class="invalid-feedback">
+                                <input type="text" class="form-control rounded-1" name="segundoApellido" id="segundoApellido" required />
+                                <div class="invalid-feedback" id="segundoApellidoError">
                                     Please provide a valid zip.
                                 </div>
                             </div>
-                        </form>
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary rounded-0 px-4">Registrar</button>
+                        <button type="button" class="btn btn-primary rounded-0 px-4" id="registerButton">Registrar</button>
                         <button type="button" class="btn btn-custom rounded-0 px-4" data-bs-dismiss="modal">Cancelar</button>
                     </div>
                 </div>
@@ -151,7 +151,7 @@
                                 </div>
 
                                 <div class="ms-xxl-auto">
-                                    <button type="button" class="btn btn-custom fw-normal rounded-0" data-bs-toggle="modal" data-bs-target="#userModal">Crear nuevo usuario</button>
+                                    <button type="button" class="btn btn-custom fw-normal rounded-0" data-bs-toggle="modal" data-bs-target="#userModal" data-modo="addUsuario">Crear nuevo usuario</button>
                                 </div>
                             </div>
                         </div>
@@ -196,6 +196,8 @@
             </div>
         </section>
     </main>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
     <script src="{{asset('assets/js/api/apiClient.js')}}"></script>
@@ -259,6 +261,23 @@
 
                 usersList(1);
             }
+        });
+
+        userModal.addEventListener('show.bs.modal', function () {
+            const button = event.relatedTarget;
+            const mode = button.getAttribute('data-modo');
+            const data = mode === 'editUsuario' ? {
+                idUser: button.getAttribute('data-idUsuario'),
+                departamento: button.getAttribute('data-idDepartamento'),
+                cargo: button.getAttribute('data-idCargo'),
+                usuario: button.getAttribute('data-usuario'),
+                email: button.getAttribute('data-email'),
+                primerNombre: button.getAttribute('data-primerNombre'),
+                segundoNombre: button.getAttribute('data-segundoNombre'),
+                primerApellido: button.getAttribute('data-primerApellido'),
+                segundoApellido: button.getAttribute('data-segundoApellido'),
+            } : {};
+            initializeUserData(mode === 'addUsuario' ? 'add' : 'edit', data);
         });
 
         // ----- Department -----
@@ -380,7 +399,7 @@
             const allItem = document.createElement('li');
             allItem.innerHTML = `<a class="dropdown-item cursor-pointer" data-id="0">Todos</a>`;
             dropdownMenu.appendChild(allItem);
-            
+
             cargos.forEach(cargo => {
                 const listItem = document.createElement('li');
                 listItem.innerHTML = `<a class="dropdown-item cursor-pointer" data-id="${cargo.idCargo}">${cargo.name}</a>`;
@@ -445,7 +464,7 @@
                                 <button type="button" class="btn btn-fruit px-4 rounded-1" 
                                     data-bs-toggle="modal" 
                                     data-bs-target="#userModal" 
-                                    data-mode="edit"
+                                    data-modo="editUsuario"
                                     data-idUsuario="${value.idUser}"
                                     data-usuario="${value.usuario}"
                                     data-primerNombre="${value.primerNombre}"
@@ -486,7 +505,117 @@
             )
         }
 
+        function initializeUserData(mode, data = {}) {
+            clearValidationErrors();
 
+            const registerButton = document.getElementById('registerButton');
+            registerButton.textContent = mode === 'add' ? '{{__("Registrar")}}' : '{{__("Actualizar")}}';
+            registerButton.onclick = () => mode === 'add' ? sendUsuario() : updateUsuario(data.idUser);
+
+            const fields = [
+                'departamento',
+                'cargo',
+                'usuario',
+                'email',
+                'primerNombre',
+                'segundoNombre',
+                'primerApellido',
+                'segundoApellido',
+            ];
+            fields.forEach(field => document.getElementById(field).value = data[field] || '');
+        }
+
+        async function updateUsuario(idUser) {
+            console.log(idUser);
+            const departamento = document.getElementById('departamento').value;
+            const cargo = document.getElementById('cargo').value;
+            const usuario = document.getElementById('usuario').value;
+            const email = document.getElementById('email').value;
+            const primerNombre = document.getElementById('primerNombre').value;
+            const segundoNombre = document.getElementById('segundoNombre').value;
+            const primerApellido = document.getElementById('primerApellido').value;
+            const segundoApellido = document.getElementById('segundoApellido').value;
+
+            const url = `user/update`;
+            const header = {
+                // 'Authorization': 'Bearer your_token_here por Token'
+                "Accept": "application/json",
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            }
+
+            const data = {
+                idUser: idUser,
+                usuario: usuario,
+                primerNombre: primerNombre,
+                segundoNombre: segundoNombre,
+                primerApellido: primerApellido,
+                segundoApellido: segundoApellido,
+                idDepartamento: departamento,
+                idCargo: cargo,
+                email: email,
+            }
+
+            const response = await fetchDataFromApi(url, data, 'PUT', header);
+            if (response && response.success) {
+                showToast(response.message);
+                const userModal = document.getElementById("userModal");
+                const modalInstance = bootstrap.Modal.getInstance(userModal);
+                if (modalInstance) modalInstance.hide();
+                usersList(1);
+            } else {
+                handleValidationErrors(response.errors || {});
+            }
+        }
+
+        async function sendUsuario() {
+            console.log('test');
+            clearValidationErrors();
+            disableButtonWithLoader('registerButton');
+            try {
+                const departamento = document.getElementById('departamento').value;
+                const cargo = document.getElementById('cargo').value;
+                const usuario = document.getElementById('usuario').value;
+                const email = document.getElementById('email').value;
+                const primerNombre = document.getElementById('primerNombre').value;
+                const segundoNombre = document.getElementById('segundoNombre').value;
+                const primerApellido = document.getElementById('primerApellido').value;
+                const segundoApellido = document.getElementById('segundoApellido').value;
+
+                const url = `user/store`;
+                const header = {
+                    // 'Authorization': 'Bearer your_token_here por Token'
+                    "Accept": "application/json",
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                };
+
+                const data = {
+                    usuario: usuario,
+                    primerNombre: primerNombre,
+                    segundoNombre: segundoNombre,
+                    primerApellido: primerApellido,
+                    segundoApellido: segundoApellido,
+                    idDepartamento: departamento,
+                    idCargo: cargo,
+                    email: email,
+                }
+
+                const response = await fetchDataFromApi(url, data, 'POST', header);
+                if (response && response.success) {
+                    showToast(response.message);
+                    const userModal = document.getElementById("userModal");
+                    const modalInstance = bootstrap.Modal.getInstance(userModal);
+                    if (modalInstance) modalInstance.hide();
+                    usersList(1);
+                } else {
+                    handleValidationErrors(response.errors || {});
+                    throw new Error(response.message || 'Error al registrar miembro familiar');
+                }
+            } catch (error) {
+                showToast(error.message || 'Ocurrió un error inesperado', 'error');
+            } finally {
+                enableButtonWithLoader('registerButton');
+            }
+        }
     </script>
 </body>
 

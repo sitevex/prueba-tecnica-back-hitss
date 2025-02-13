@@ -48,3 +48,56 @@ function pagination(
         }
     });
 }
+
+function clearValidationErrors() {
+    document.querySelectorAll('.invalid-feedback').forEach(el => el.textContent = '');
+    document.querySelectorAll('.form-control, .form-select').forEach(el => el.classList.remove('is-invalid'));
+}
+
+function handleValidationErrors(errors) {
+    for (const [field, messages] of Object.entries(errors)) {
+        const input = document.getElementById(field);
+        if (input) {
+            input.classList.add('is-invalid');
+            const errorDiv = document.getElementById(`${field}Error`);
+            if (errorDiv) errorDiv.textContent = messages.join(', ');
+        }
+    }
+}
+
+function clearFieldError(input) {
+    input.classList.remove('is-invalid');
+    const errorDiv = document.getElementById(`${input.id}Error`);
+    if (errorDiv) errorDiv.textContent = '';
+}
+
+
+function disableButtonWithLoader(buttonId) {
+    const button = document.getElementById(buttonId);
+    if (button) {
+        button.disabled = true;
+        button.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Procesando...`;
+    }
+}
+
+function enableButtonWithLoader(buttonId) {
+    const button = document.getElementById(buttonId);
+    if (button) {
+        button.disabled = false;
+        button.innerHTML = 'Enviar';
+    }
+}
+
+function showToast(message) {
+    toastr.options = {
+        closeButton: true,
+        progressBar: true,
+        timeOut: 5000,
+        extendedTimeOut: 5000,
+        tapToDismiss: false,
+        preventDuplicates: true,
+        positionClass: 'toast-top-right',
+        toastClass: 'custom-toast',
+    };
+    toastr.info(message);
+}

@@ -23,5 +23,7 @@ Route::get('/departments', [DepartamentoController::class, 'departmentsList'])->
 Route::get('/cargos', [CargoController::class, 'cargosList'])->name('api.hitss.cargos');
 # Users
 Route::get('/user-lists', [UsuarioController::class, 'userList'])->name('api.hitss.users');
+Route::put('/user/update', [UsuarioController::class, 'updateUsuario'])->name('api.hitss.user');
+Route::post('/user/store', [UsuarioController::class, 'storeUsuario'])->name('api.hitss.user');
 
 
