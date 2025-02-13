@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\UserListRequest;
+use App\Http\Requests\Api\UserStoreRequest;
 use App\Http\Requests\Api\UserUpdateRequest;
 use App\Models\Usuario;
 use Illuminate\Http\JsonResponse;
@@ -163,7 +164,7 @@ class UsuarioController extends Controller
         }
     }
 
-    public function storeUsuario(Request $request) : JsonResponse {
+    public function storeUsuario(UserStoreRequest $request) : JsonResponse {
         try {
             $usuario = Usuario::create([
                 'usuario' => $request->input('usuario'),
@@ -178,7 +179,7 @@ class UsuarioController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Miembro de la familia registrado existosamente.',
+                'message' => 'Usuario registrado existosamente.',
                 'data' => $usuario,
             ], 200);
         } catch (\Exception $e) {
@@ -186,6 +187,41 @@ class UsuarioController extends Controller
                 'code' => 500,
                 'success' => false,
                 'message' => 'Error interno del servidor' . $e->getMessage(),
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function deleteUsuario(Request $request) : JsonResponse {
+        try {
+            $request->validate([
+                'idUser' => 'required|integer|exists:users,id',
+            ]);
+
+            $idUser = $request->input('idUser');
+
+            $usuario = Usuario::where('id', $idUser)->first();
+
+            if (!$usuario) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El usuario no existe.',
+                ], 404);
+            }
+
+            // Delete
+            $usuario->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Usuario eliminado con éxito.'
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'success' => false,
+                'message' => 'Error interno del servidor: ' . $e->getMessage(),
                 'error' => $e->getMessage(),
             ], 500);
         }

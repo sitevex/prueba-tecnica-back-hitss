@@ -117,7 +117,7 @@
                         <p class="text-start fs-sm mb-0">¿Está seguro de eliminar el usuario seleccionado?</p>
                     </div>
                     <div class="modal-footer border-0 pt-0">
-                        <button type="button" class="btn btn-primary px-4">Aceptar</button>
+                        <button type="button" class="btn btn-primary px-4" id="deleteButton">Aceptar</button>
                         <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
                     </div>
                 </div>
@@ -208,6 +208,7 @@
         const btnJobPosition = document.querySelector('.btn-cargo');
         const departmentDropdownItems = document.querySelectorAll('.dropdown-department .dropdown-item');
         const jobPositionDropdownItems = document.querySelectorAll('.dropdown-cargo .dropdown-item');
+        const deleteButton = document.getElementById('deleteButton');
 
         departmentsList({
             sortBy: 'id',
@@ -263,6 +264,11 @@
             }
         });
 
+        deleteButton.addEventListener('click', async () => {
+            const idUser = deleteModal.getAttribute('data-idUsuario');
+            await deleteUser(idUser);
+        });
+
         userModal.addEventListener('show.bs.modal', function () {
             const button = event.relatedTarget;
             const mode = button.getAttribute('data-modo');
@@ -278,6 +284,13 @@
                 segundoApellido: button.getAttribute('data-segundoApellido'),
             } : {};
             initializeUserData(mode === 'addUsuario' ? 'add' : 'edit', data);
+        });
+
+        deleteModal.addEventListener('show.bs.modal', function () {
+            const button = event.relatedTarget;
+            const idUser = button.getAttribute('data-idUsuario');
+            // Guardar los datos en la modal para referencia
+            deleteModal.setAttribute('data-idUsuario', idUser);
         });
 
         // ----- Department -----
@@ -608,7 +621,7 @@
                     usersList(1);
                 } else {
                     handleValidationErrors(response.errors || {});
-                    throw new Error(response.message || 'Error al registrar miembro familiar');
+                    throw new Error(response.message || 'Error al registrar usuario');
                 }
             } catch (error) {
                 showToast(error.message || 'Ocurrió un error inesperado', 'error');
@@ -616,6 +629,34 @@
                 enableButtonWithLoader('registerButton');
             }
         }
+
+        // Delete
+        async function deleteUser(idUser) {
+            // console.log(idUser);
+            const url = `user/delete`;
+            const header = {
+                // 'Authorization': 'Bearer your_token_here por Token'
+                "Accept": "application/json",
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            }
+
+            const data = {
+                idUser: idUser,
+            }
+
+            const response = await fetchDataFromApi(url, data, 'DELETE', header);
+
+            if (response && response.success) {
+                showToast(response.message);
+                const deleteModal = document.getElementById("deleteModal");
+                const modalInstance = bootstrap.Modal.getInstance(deleteModal);
+                if (modalInstance) modalInstance.hide();
+                usersList(1);
+            } else {
+                handleValidationErrors(response.errors || {});
+            }
+        }
+
     </script>
 </body>
 

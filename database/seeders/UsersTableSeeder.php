@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Usuario;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -17,7 +18,7 @@ class UsersTableSeeder extends Seeder
         // User::truncate();
 
         // Crear registro de users
-        User::insert([
+        Usuario::insert([
             [
                 'usuario' => 'admin',
                 'primerNombre' => 'Juan',

@@ -25,5 +25,6 @@ Route::get('/cargos', [CargoController::class, 'cargosList'])->name('api.hitss.c
 Route::get('/user-lists', [UsuarioController::class, 'userList'])->name('api.hitss.users');
 Route::put('/user/update', [UsuarioController::class, 'updateUsuario'])->name('api.hitss.user');
 Route::post('/user/store', [UsuarioController::class, 'storeUsuario'])->name('api.hitss.user');
+Route::delete('/user/delete', [UsuarioController::class, 'deleteUsuario'])->name('api.hitss.user.delete');
 
 

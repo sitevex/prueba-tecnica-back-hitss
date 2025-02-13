@@ -5,7 +5,7 @@ namespace App\Http\Requests\Api;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
-class UserUpdateRequest extends FormRequest
+class UserStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +23,6 @@ class UserUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'idUser' => ['required', 'integer', 'exists:users,id'],
             'usuario' => ['required', 'string', 'max:50'],  // 'unique:users,usuario,' . $this->idUser
             'primerNombre' => ['required', 'string', 'max:50'],
             'segundoNombre' => ['nullable', 'string', 'max:50'],
@@ -41,14 +40,9 @@ class UserUpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'idUser.required' => 'El ID del usuario es obligatorio.',
-            'idUser.integer' => 'El ID del usuario debe ser un número.',
-            'idUser.exists' => 'El usuario seleccionado no existe.',
-
             'usuario.required' => 'El campo usuario es obligatorio.',
             'usuario.string' => 'El usuario debe ser una cadena de texto.',
             'usuario.max' => 'El usuario no puede exceder los 50 caracteres.',
-            'usuario.unique' => 'Este nombre de usuario ya está en uso.',
 
             'primerNombre.required' => 'El primer nombre es obligatorio.',
             'primerNombre.string' => 'El primer nombre debe ser una cadena de texto.',
