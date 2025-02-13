@@ -24,7 +24,7 @@ class Cargo extends Model
     // Relación con los Users asignados a este cargo
     public function usuarios()
     {
-        return $this->hasMany(User::class, 'idCargo');
+        return $this->hasMany(Usuario::class, 'idCargo');
     }
 
 }

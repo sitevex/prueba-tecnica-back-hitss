@@ -135,24 +135,18 @@
                         <div class="mb-3">
                             <div class="d-flex flex-wrap gap-3">
                                 <div class="dropdown">
-                                    <button class="btn btn-custom-dropdown dropdown-toggle rounded-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button class="btn btn-custom-dropdown btn-department dropdown-toggle rounded-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         Seleccione un Departamento
                                     </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item">Action</a></li>
-                                        <li><a class="dropdown-item">Another action</a></li>
-                                        <li><a class="dropdown-item">Something else here</a></li>
+                                    <ul class="dropdown-menu dropdown-department">
                                     </ul>
                                 </div>
 
                                 <div class="dropdown">
-                                    <button class="btn btn-custom-dropdown dropdown-toggle rounded-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button class="btn btn-custom-dropdown btn-cargo dropdown-toggle rounded-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         Seleccione un Cargo
                                     </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item">Action</a></li>
-                                        <li><a class="dropdown-item">Another action</a></li>
-                                        <li><a class="dropdown-item">Something else here</a></li>
+                                    <ul class="dropdown-menu dropdown-cargo">
                                     </ul>
                                 </div>
 
@@ -179,21 +173,22 @@
                                             <th class="text-table-body text-center fw-semibold fs-6" scope="col">Acciones</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="text-table-body text-center">Mark</td>
-                                            <td class="text-table-body">Otto</td>
-                                            <td class="text-table-body">@mdo</td>
-                                            <td class="text-table-body">Mark</td>
-                                            <td class="text-table-body">Otto</td>
-                                            <td class="text-table-body">@mdo</td>
-                                            <td class="text-center">
-                                                <button type="button" class="btn btn-fruit px-4 rounded-1" data-bs-toggle="modal" data-bs-target="#userModal" data-mode="edit"><i class="bi bi-pencil-square"></i> Editar</button>
-                                                <button type="button" class="btn btn-razzmatazz px-4 rounded-1" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="bi bi-trash"></i> Eliminar</button>
-                                            </td>
-                                        </tr>
+                                    <tbody class="list" id="usuarios-table-body">
+                                        <td colspan="7" class="fs-9 align-middle text-center">
+                                            <div class="spinner-border text-primary" roles="status">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                        </td>
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="row align-items-center justify-content-between py-2 pe-0 fs-9">
+                                <div class="col-auto d-flex">
+                                    <span class="fs-9" id="page-info-usuarios-lists"></span>
+                                </div>
+                                <div class="col-auto d-flex">
+                                    <ul class="fs-9 mb-0 pagination align-items-center" id="paginationBodyUsuariosList"></ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -203,6 +198,296 @@
     </main>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+    <script src="{{asset('assets/js/api/apiClient.js')}}"></script>
+    <script src="{{asset('assets/js/helpers/utils.js')}}"></script>
+    <script>
+
+        const btnDepartment = document.querySelector('.btn-department');
+        const btnJobPosition = document.querySelector('.btn-cargo');
+        const departmentDropdownItems = document.querySelectorAll('.dropdown-department .dropdown-item');
+        const jobPositionDropdownItems = document.querySelectorAll('.dropdown-cargo .dropdown-item');
+
+        departmentsList({
+            sortBy: 'id',
+            sortDirection: 'asc',
+            populateSelect: true,
+        });
+
+        departmentsList({
+            sortBy: 'id',
+            sortDirection: 'asc',
+            populateDropdown: true,
+        });
+
+        cargosList({
+            sortBy: 'id',
+            sortDirection: 'asc',
+            populateSelect: true,
+        });
+
+        cargosList({
+            sortBy: 'id',
+            sortDirection: 'asc',
+            populateDropdown: true,
+        });
+
+        usersList(1);
+
+        document.querySelector('.dropdown-department').addEventListener('click', function(event) {
+            const item = event.target.closest('.dropdown-item'); // Verifica si el clic fue en un <a>
+            if (item) {
+                event.preventDefault();
+                let departmentId = item.getAttribute('data-id');
+                let departmentName = item.textContent;
+
+                btnDepartment.innerHTML = `${departmentName} <span class="fas fa-angle-down ms-2"></span>`;
+                btnDepartment.setAttribute('data-id', departmentId);
+
+                usersList(1);
+            }
+        });
+
+        document.querySelector('.dropdown-cargo').addEventListener('click', function(event) {
+            const item = event.target.closest('.dropdown-item'); // Verifica si el clic fue en un <a>
+            if (item) {
+                event.preventDefault();
+                let cargoId = item.getAttribute('data-id');
+                let cargoName = item.textContent;
+
+                btnJobPosition.innerHTML = `${cargoName} <span class="fas fa-angle-down ms-2"></span>`;
+                btnJobPosition.setAttribute('data-id', cargoId);
+
+                usersList(1);
+            }
+        });
+
+        // ----- Department -----
+        async function departmentsList(options = {}) {
+            const url = `departments`;
+            const queryParams = new URLSearchParams({
+                // search: options.search !== undefined ? options.search : queryDepartmentValue,
+                paginate: options.paginate || false,
+                perPage: options.perPage || '',
+                page: options.page || 1, // Página actual
+                sortBy: options.sortBy || '',
+                sortDirection: options.sortDirection || '',
+            });
+
+            const headers = {
+                // 'Authorization': 'Bearer your_token_here por Token'
+                "Accept": "application/json",
+                "X-CSRF-TOKEN": '{{ csrf_token() }}',
+            };
+
+            const data = await fetchDataFromApi(url, queryParams, 'GET', headers);
+            if (data && data.success) {
+                if (options.populateSelect) {
+                    populateSelectDepartmets(data.data.departments);
+                }
+                if (options.populateDropdown) {
+                    populateDropdownDepartments(data.data.departments);
+                }
+            } else {
+                console.error("Error al cargar departamentos");
+            }
+        }
+
+        function populateSelectDepartmets(departments) {
+            const departmentsSelect = document.getElementById('departamento');
+
+            while (departmentsSelect.options.length > 1) {
+                departmentsSelect.remove(1);
+            }
+
+            departments.forEach(department => {
+                const option = document.createElement('option');
+                option.value = department.idDepartment.toString();
+                option.textContent = department.name;
+                departmentsSelect.appendChild(option);
+            });
+
+        }
+
+        function populateDropdownDepartments(departments) {
+            const dropdownMenu = document.querySelector('.dropdown-department'); 
+            dropdownMenu.innerHTML = ''; // Limpiar lista antes de agregar nuevos elementos
+
+            // Agregar el ítem fijo "Todos"
+            const allItem = document.createElement('li');
+            allItem.innerHTML = `<a class="dropdown-item cursor-pointer" data-id="0">Todos</a>`;
+            dropdownMenu.appendChild(allItem);
+
+
+            departments.forEach(department => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<a class="dropdown-item cursor-pointer" data-id="${department.idDepartment}">${department.name}</a>`;
+                dropdownMenu.appendChild(listItem);
+            });
+        }
+
+        // ----- Cargo -----
+        async function cargosList(options = {}) {
+            const url = `cargos`;
+            const queryParams = new URLSearchParams({
+                // search: options.search !== undefined ? options.search : queryCargoValue,
+                paginate: options.paginate || false,
+                perPage: options.perPage || '',
+                page: options.page || 1, // Página actual
+                sortBy: options.sortBy || '',
+                sortDirection: options.sortDirection || '',
+            });
+
+            const headers = {
+                // 'Authorization': 'Bearer your_token_here por Token'
+                "Accept": "application/json",
+                "X-CSRF-TOKEN": '{{ csrf_token() }}',
+            };
+
+            const data = await fetchDataFromApi(url, queryParams, 'GET', headers);
+            if (data && data.success) {
+                if (options.populateSelect) {
+                    populateSelectCargos(data.data.cargos);
+                }
+                if (options.populateDropdown) {
+                    populateDropdownCargos(data.data.cargos);
+                }
+            } else {
+                console.error("Error al cargar los cargos");
+            }
+        }
+        
+        function populateSelectCargos(cargos) {
+            const cargosSelect = document.getElementById('cargo');
+
+            while (cargosSelect.options.length > 1) {
+                cargosSelect.remove(1);
+            }
+
+            cargos.forEach(cargo => {
+                const option = document.createElement('option');
+                option.value = cargo.idCargo.toString();
+                option.textContent = cargo.name;
+                cargosSelect.appendChild(option);
+            });
+
+        }
+
+        function populateDropdownCargos(cargos) {
+            const dropdownMenu = document.querySelector('.dropdown-cargo'); 
+            dropdownMenu.innerHTML = ''; // Limpiar lista antes de agregar nuevos elementos
+
+            // Agregar el ítem fijo "Todos"
+            const allItem = document.createElement('li');
+            allItem.innerHTML = `<a class="dropdown-item cursor-pointer" data-id="0">Todos</a>`;
+            dropdownMenu.appendChild(allItem);
+            
+            cargos.forEach(cargo => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<a class="dropdown-item cursor-pointer" data-id="${cargo.idCargo}">${cargo.name}</a>`;
+                dropdownMenu.appendChild(listItem);
+            });
+        }
+
+        // ----- Usuario -----
+        async function usersList(page) {
+            // let search = document.getElementById('search').value.trim();
+            let departmentCode = btnDepartment.getAttribute('data-id');
+            let positionCode = btnJobPosition.getAttribute('data-id');
+            currentPage = page === undefined ? currentPage : page;
+
+            const url = `user-lists`;
+            const queryParams = new URLSearchParams({
+                // search: search,
+                departmentCode: departmentCode || '',
+                positionCode: positionCode || '',
+                paginate: true,
+                perPage: 10,
+                page: currentPage
+            });
+
+            const headers = {
+                // 'Authorization': 'Bearer your_token_here por Token'
+                "Accept": "application/json",
+                "X-CSRF-TOKEN": '{{ csrf_token() }}',
+            };
+
+            const data = await fetchDataFromApi(url, queryParams, 'GET', headers);
+            if (data && data.success) {
+                populateTableUsers(data.data.users);
+                footerUsers(data.pagination);
+            } else {
+                console.error("Error al cargar lista de usuarios");
+            }
+        }
+
+        function populateTableUsers(users) {
+            const usuariosTableBody = document.getElementById('usuarios-table-body');
+            usuariosTableBody.innerHTML = '';
+            if (users.length === 0) {
+                usuariosTableBody.innerHTML = `
+                <tr class="laborAction-static">
+                    <td colspan="7" class="text-center fs-9">
+                        <p class="fw-bo text-900 mb-0">No se encontraron resultados.</p>
+                    </td>
+                </tr>
+                `;
+            } else {
+                users.forEach(value => {
+                    const row = `
+                        <tr>
+                            <td class="text-table-body text-center">${value.usuario}</td>
+                            <td class="text-table-body">${value.primerNombre} ${value.segundoNombre}</td>
+                            <td class="text-table-body">${value.primerApellido} ${value.segundoApellido}</td>
+                            <td class="text-table-body">${value.departamento}</td>
+                            <td class="text-table-body">${value.cargo}</td>
+                            <td class="text-table-body">${value.email}</td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-fruit px-4 rounded-1" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#userModal" 
+                                    data-mode="edit"
+                                    data-idUsuario="${value.idUser}"
+                                    data-usuario="${value.usuario}"
+                                    data-primerNombre="${value.primerNombre}"
+                                    data-segundoNombre="${value.segundoNombre}"
+                                    data-primerApellido="${value.primerApellido}"
+                                    data-segundoApellido="${value.segundoApellido}"
+                                    data-idDepartamento="${value.idDepartamento}"
+                                    data-departamento="${value.departamento}"
+                                    data-idCargo="${value.idCargo}"
+                                    data-cargo="${value.cargo}"
+                                    data-email="${value.email}">
+                                    <i class="bi bi-pencil-square"></i> 
+                                    Editar
+                                </button>
+                                <button type="button" class="btn btn-razzmatazz px-4 rounded-1" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#deleteModal"
+                                    data-idUsuario="${value.idUser}">
+                                    <i class="bi bi-trash"></i> 
+                                    Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    usuariosTableBody.innerHTML += row;
+                });
+            }
+        }
+
+        function footerUsers(data) {
+            pagination(
+                data,
+                'paginationBodyUsuariosList',
+                'page-info-usuarios-lists',
+                'btn-prev-usuariosLists',
+                'btn-next-usuariosLists',
+                usersList
+            )
+        }
+
+
+    </script>
 </body>
 
 </html>

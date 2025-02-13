@@ -1,5 +1,8 @@
 const BASE_URL = `${window.location.origin}`;
 const API_BASE_URL = `${BASE_URL}/api-hitss/ti/v1`;
+let isFetching = false;
+let perPage = 10;
+let currentPage = 1;
 
 /**
  * Función para realizar solicitudes al API con soporte para diferentes métodos HTTP.

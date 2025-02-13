@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\CargoController;
+use App\Http\Controllers\Api\DepartamentoController;
+use App\Http\Controllers\Api\UsuarioController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +17,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+# Departments
+Route::get('/departments', [DepartamentoController::class, 'departmentsList'])->name('api.hitss.departments');
+# Cargos
+Route::get('/cargos', [CargoController::class, 'cargosList'])->name('api.hitss.cargos');
+# Users
+Route::get('/user-lists', [UsuarioController::class, 'userList'])->name('api.hitss.users');
+
+

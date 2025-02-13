@@ -170,3 +170,7 @@ body {
 .form-control:focus{
     box-shadow: none;
 }
+
+.cursor-pointer{
+    cursor: pointer;
+}

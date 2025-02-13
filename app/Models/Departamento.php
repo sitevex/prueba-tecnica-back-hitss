@@ -24,7 +24,7 @@ class Departamento extends Model
     // Relación con los Users asignados a este departamento
     public function usuarios()
     {
-        return $this->hasMany(User::class, 'idDepartamento');
+        return $this->hasMany(Usuario::class, 'idDepartamento');
     }
 
 }
