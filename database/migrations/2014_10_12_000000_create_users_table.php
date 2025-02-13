@@ -13,12 +13,25 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('usuario')->unique();
+            $table->string('primerNombre');
+            $table->string('segundoNombre')->nullable();
+            $table->string('primerApellido');
+            $table->string('segundoApellido')->nullable();
+            $table->unsignedBigInteger('idDepartamento');
+            $table->unsignedBigInteger('idCargo');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+
+            // $table->timestamp('email_verified_at')->nullable();
+            // $table->string('password');
+            // $table->rememberToken();
+
             $table->timestamps();
+
+            // Foreign key constraints
+            $table->foreign('idDepartamento')->references('id')->on('departamentos');
+            $table->foreign('idCargo')->references('id')->on('cargos');
+
         });
     }
 
