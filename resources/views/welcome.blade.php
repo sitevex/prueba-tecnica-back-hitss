@@ -127,7 +127,7 @@
         <section class="py-5">
             <div class="container-fluid">
                 <div class="row g-3 mb-4 border-bottom-body">
-                    <div class="px-5">
+                    <div class="px-4">
                         <div class="col-auto mb-3">
                             <p class="small mb-0">Módulo de Administración</p>
                             <h4 class="fw-bold">Administración de usuarios</h4>
@@ -163,7 +163,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="px-5" id="users">
+                <div class="px-3" id="users">
                     <div class="card border-0 rounded-0">
                         <div class="card-body p-4">
                             <div class="table-responsive">
@@ -188,8 +188,8 @@
                                             <td class="text-table-body">Otto</td>
                                             <td class="text-table-body">@mdo</td>
                                             <td class="text-center">
-                                                <button type="button" class="btn btn-fruit" data-bs-toggle="modal" data-bs-target="#userModal" data-mode="edit"><i class="bi bi-pencil-square"></i> Editar</button>
-                                                <button type="button" class="btn btn-razzmatazz" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="bi bi-trash"></i> Eliminar</button>
+                                                <button type="button" class="btn btn-fruit px-4 rounded-1" data-bs-toggle="modal" data-bs-target="#userModal" data-mode="edit"><i class="bi bi-pencil-square"></i> Editar</button>
+                                                <button type="button" class="btn btn-razzmatazz px-4 rounded-1" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="bi bi-trash"></i> Eliminar</button>
                                             </td>
                                         </tr>
                                     </tbody>
