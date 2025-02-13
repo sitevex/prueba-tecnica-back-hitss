@@ -38,7 +38,6 @@
                                     <option>...</option>
                                 </select>
                                 <div class="invalid-feedback" id="departamentoError">
-                                    Please select a valid state.
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -48,7 +47,6 @@
                                     <option>...</option>
                                 </select>
                                 <div class="invalid-feedback" id="cargoError">
-                                    Please select a valid state.
                                 </div>
                             </div>
 
@@ -56,7 +54,6 @@
                                 <label for="usuario" class="form-label fw-semibold fs-sm mb-1">Usuario:</label>
                                 <input type="text" class="form-control rounded-1" name="usuario" id="usuario" required />
                                 <div class="invalid-feedback" id="usuarioError">
-                                    Looks good!
                                 </div>
                             </div>
 
@@ -64,7 +61,6 @@
                                 <label for="email" class="form-label fw-semibold fs-sm mb-1">Email:</label>
                                 <input type="email" class="form-control rounded-1" name="email" id="email" required />
                                 <div class="invalid-feedback" id="emailError">
-                                    Looks good!
                                 </div>
                             </div>
 
@@ -72,7 +68,6 @@
                                 <label for="primerNombre" class="form-label fw-semibold fs-sm mb-1">Primer Nombre:</label>
                                 <input type="text" class="form-control rounded-1" name="primerNombre" id="primerNombre" required />
                                 <div class="invalid-feedback" id="primerNombreError">
-                                    Please provide a valid city.
                                 </div>
                             </div>
                             
@@ -80,7 +75,6 @@
                                 <label for="segundoNombre" class="form-label fw-semibold fs-sm mb-1">Segundo Nombre</label>
                                 <input type="text" class="form-control rounded-1" name="segundoNombre" id="segundoNombre" required />
                                 <div class="invalid-feedback" id="segundoNombreError">
-                                    Please provide a valid zip.
                                 </div>
                             </div>
 
@@ -88,7 +82,6 @@
                                 <label for="primerApellido" class="form-label fw-semibold fs-sm mb-1">Primer Apellido:</label>
                                 <input type="text" class="form-control rounded-1" name="primerApellido" id="primerApellido" required />
                                 <div class="invalid-feedback" id="primerApellidoError">
-                                    Please provide a valid city.
                                 </div>
                             </div>
                             
@@ -96,7 +89,6 @@
                                 <label for="segundoApellido" class="form-label fw-semibold fs-sm mb-1">Segundo Apellido</label>
                                 <input type="text" class="form-control rounded-1" name="segundoApellido" id="segundoApellido" required />
                                 <div class="invalid-feedback" id="segundoApellidoError">
-                                    Please provide a valid zip.
                                 </div>
                             </div>
                         </div>
