@@ -7,7 +7,6 @@ use App\Http\Requests\Api\DepartamentoListRequest;
 use App\Models\Departamento;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 
 class DepartamentoController extends Controller
 {

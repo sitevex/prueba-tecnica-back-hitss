@@ -7,7 +7,6 @@ use App\Http\Requests\Api\CargoListRequest;
 use App\Models\Cargo;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 
 class CargoController extends Controller
 {
