@@ -531,7 +531,7 @@
         }
 
         async function updateUsuario(idUser) {
-            console.log(idUser);
+            // console.log(idUser);
             const departamento = document.getElementById('departamento').value;
             const cargo = document.getElementById('cargo').value;
             const usuario = document.getElementById('usuario').value;
